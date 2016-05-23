@@ -2,12 +2,16 @@ package Common;
 
 import java.util.*;
 
-public abstract class PuzzleBoard {
-   private Cell<Integer>[][] cells;
-   private List<Rule> rules;
+public abstract class PuzzleBoard<T> {
+   private Cell<T>[][] cells;
+   private List<Rule<T>> rules;
    private List<Guess> guessHistory;
    
-   public PuzzleBoard solve () throws notSolvableException {
+   public PuzzleBoard() {
+      
+   }
+   
+   public PuzzleBoard<T> solve () throws notSolvableException {
       if ( isSolved() )
          return this;
       
@@ -29,7 +33,7 @@ public abstract class PuzzleBoard {
    }
    
    private void runRules () throws notSolvableException {
-      for (Rule r: rules) {
+      for (Rule<T> r: rules) {
          r.applyRule();
       }
       
@@ -46,12 +50,12 @@ public abstract class PuzzleBoard {
    private Guess makeGuess() throws notSolvableException {
       // finds any cell that is not solved, throws notSolvableException if there are no possible values
       // otherwise sets cell solvedVal equal to one of the possible values and creates a Guess
-      Cell<Integer> notSolvedCell = findNotSolvedCell();
+      Cell<T> notSolvedCell = findNotSolvedCell();
       
       if (null == notSolvedCell)
          throw new notSolvableException();
       
-      Integer guessedVal = notSolvedCell.getPossibleValue(); 
+      T guessedVal = notSolvedCell.getPossibleValue(); 
       if (null == guessedVal) 
          throw new notSolvableException();
       
@@ -59,7 +63,7 @@ public abstract class PuzzleBoard {
       return new Guess(notSolvedCell, guessedVal);
    }
    
-   private Cell<Integer> findNotSolvedCell() {
+   private Cell<T> findNotSolvedCell() {
       for (int i = 0; i < cells.length; i++ ) {
          for ( int j = 0; j < cells[i].length; j++ ) {
             if (!cells[i][j].isSolved())
@@ -72,10 +76,10 @@ public abstract class PuzzleBoard {
    
   
    private class Guess {
-      private Cell<Integer> cell;
-      private Integer guess;
+      private Cell<T> cell;
+      private T guess;
       
-      public Guess(Cell<Integer> cell, Integer guess) {
+      public Guess(Cell<T> cell, T guess) {
          this.cell = cell;
          this.guess = guess;
       }

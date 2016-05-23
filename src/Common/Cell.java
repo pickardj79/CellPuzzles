@@ -14,6 +14,10 @@ public class Cell<T> {
       return null != solvedVal;
    }
    
+   public boolean notSolvable() {
+      return !isSolved() && possibleVals.size() == 0;
+   }
+   
    public void removeValue(T val) {
       for (int i = 0; i < possibleVals.size(); i++) {
          if (val == possibleVals.get(i) ) {
@@ -25,6 +29,9 @@ public class Cell<T> {
             break;
          }
       }
+      
+      if (isSolved() && val == getSolvedVal())
+         solvedVal = null;
       
       return;
    }
